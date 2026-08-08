@@ -46,12 +46,36 @@ HTML_TEMPLATE = """
         h1 {
             color: #fff;
             font-size: 28px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
         .stats {
             color: #ccff00;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+        }
+        /* قسم المنصات المدعومة الجديد */
+        .platforms {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+        }
+        .platform-badge {
+            background: #111;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .platform-badge span {
+            color: #ccff00;
+            font-weight: bold;
         }
         form {
             display: flex;
@@ -102,13 +126,17 @@ HTML_TEMPLATE = """
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            transition: 0.2s;
         }
-        /* نافذة القائمة الجانبية المنبثقة */
+        button[type="submit"]:hover {
+            background-color: #b3e600;
+        }
+        /* القائمة الجانبية المنبثقة المحسنة */
         .sidebar {
             height: 100%;
             width: 0;
             position: fixed;
-            z-index: 1;
+            z-index: 10;
             top: 0;
             right: 0;
             background-color: #111;
@@ -116,23 +144,30 @@ HTML_TEMPLATE = """
             transition: 0.3s;
             padding-top: 60px;
             text-align: right;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.8);
         }
         .sidebar a {
-            padding: 10px 25px;
+            padding: 12px 25px;
             text-decoration: none;
             font-size: 18px;
             color: #fff;
             display: block;
             transition: 0.3s;
+            border-bottom: 1px solid #222;
         }
         .sidebar a:hover {
             color: #ccff00;
+            background: #1a1a1a;
         }
         .sidebar .close-btn {
             position: absolute;
             top: 15px;
             left: 20px;
-            font-size: 25px;
+            font-size: 30px;
+            border: none;
+            background: none;
+            color: #fff;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -143,17 +178,26 @@ HTML_TEMPLATE = """
         <div class="logo">DOWNLOAD<br><span>VIDEOS</span></div>
     </div>
 
-    <!-- القائمة الجانبية الخيارات -->
+    <!-- القائمة الجانبية المحدثة ب الخيارات الحقيقية -->
     <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
-        <a href="#">الرئيسية</a>
-        <a href="#">التحميلات الشائعة</a>
-        <a href="#">من نحن</a>
-        <a href="#">تواصل معنا</a>
+        <button class="close-btn" onclick="closeNav()">&times;</button>
+        <a href="#" onclick="closeNav()">🏠 الرئيسية</a>
+        <a href="#" onclick="alert('الموقع يدعم التحميل من يوتيوب، تيك توك، انستغرام، فيسبوك وتويتر بجودة عالية مجاناً!')">📌 المنصات المدعومة</a>
+        <a href="#" onclick="alert('منصة التحميل الذكية الإصدار 2.0 - صُممت لتلبي احتياجاتك بكل سرعة واحترافية.')">ℹ️ عن الموقع</a>
+        <a href="#" onclick="alert('للدعم والاستفسار، تواصل عبر حساباتنا الرسمية.')">📞 تواصل معنا</a>
     </div>
 
     <h1>تحميل الفيديوهات</h1>
     <div class="stats">videos downloaded 4,233,226+ <br> users • 153 countries 1,472,165+</div>
+
+    <!-- شريط المنصات المدعومة -->
+    <div class="platforms">
+        <div class="platform-badge">🔴 <span>YouTube</span></div>
+        <div class="platform-badge">⚫ <span>TikTok</span></div>
+        <div class="platform-badge">🟣 <span>Instagram</span></div>
+        <div class="platform-badge">🔵 <span>Facebook</span></div>
+        <div class="platform-badge">🩵 <span>Twitter/X</span></div>
+    </div>
 
     <form method="POST">
         <div class="input-container">
@@ -174,7 +218,7 @@ HTML_TEMPLATE = """
         }
 
         function openNav() {
-            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("mySidebar").style.width = "260px";
         }
 
         function closeNav() {
