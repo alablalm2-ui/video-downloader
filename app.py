@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# قالب HTML الخاص بالموقع وتصميمك الاحترافي
+# الكود الكامل مع القائمة وزر اللصق وتصميمك الأصلي
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -21,14 +21,24 @@ HTML_TEMPLATE = """
             margin: 0;
             padding: 20px;
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
         h1 {
             color: #fff;
             font-size: 28px;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         .stats {
             color: #ccff00;
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 30px;
         }
         form {
@@ -39,6 +49,10 @@ HTML_TEMPLATE = """
             max-width: 500px;
             margin: 0 auto;
         }
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
         input[type="text"] {
             width: 100%;
             padding: 15px;
@@ -47,8 +61,23 @@ HTML_TEMPLATE = """
             border: none;
             outline: none;
             box-sizing: border-box;
+            background: #fff;
+            color: #000;
         }
-        button {
+        .paste-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ccff00;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #000;
+        }
+        button[type="submit"] {
             width: 100%;
             padding: 15px;
             font-size: 18px;
@@ -59,34 +88,35 @@ HTML_TEMPLATE = """
             border-radius: 10px;
             cursor: pointer;
         }
-        .success-box {
-            background-color: #ccff00;
-            color: #000;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 25px;
-            font-weight: bold;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
     </style>
 </head>
 <body>
+
+    <div class="header">
+        <div class="menu-icon">☰</div>
+    </div>
 
     <h1>تحميل الفيديوهات</h1>
     <div class="stats">videos downloaded 4,233,226+ <br> users • 153 countries 1,472,165+</div>
 
     <form method="POST">
-        <input type="text" name="url" placeholder="ألصق الرابط هنا..." required>
+        <div class="input-container">
+            <input type="text" id="urlInput" name="url" placeholder="ألصق الرابط هنا..." required>
+            <button type="button" class="paste-btn" onclick="pasteText()">لصق</button>
+        </div>
         <button type="submit">تحميل</button>
     </form>
 
-    {% if downloaded %}
-    <div class="success-box">
-        تم تحميل وحفظ الفيديو بنجاح! سيتم تنزيله على جهازك الان 🐐🔥 #cr7 #capcut
-    </div>
-    {% endif %}
+    <script>
+        async function pasteText() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('urlInput').value = text;
+            } catch (err) {
+                alert('فشل اللصق تلقائياً، قم باللصق يدوياً.');
+            }
+        }
+    </script>
 
 </body>
 </html>
@@ -94,13 +124,10 @@ HTML_TEMPLATE = """
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    downloaded = False
     if request.method == 'POST':
         url = request.form.get('url')
         if url:
             output_filename = 'downloaded_video.mp4'
-            
-            # إزالة الملف القديم إذا كان موجوداً لتجنب التداخل
             if os.path.exists(output_filename):
                 os.remove(output_filename)
                 
@@ -112,13 +139,12 @@ def index():
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([url])
                 
-                # إرسال الملف مباشرة لجهاز المستخدم
                 if os.path.exists(output_filename):
                     return send_file(output_filename, as_attachment=True)
             except Exception as e:
                 print(f"Error: {e}")
                 
-    return render_template_string(HTML_TEMPLATE, downloaded=downloaded)
+    return render_template_string(HTML_TEMPLATE)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
