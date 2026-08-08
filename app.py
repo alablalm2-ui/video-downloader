@@ -4,7 +4,6 @@ import os
 
 app = Flask(__name__)
 
-# الكود الكامل مع القائمة وزر اللصق وتصميمك الأصلي
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -25,16 +24,29 @@ HTML_TEMPLATE = """
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 10px 10px;
+            max-width: 500px;
+            margin: 0 auto;
         }
         .menu-icon {
-            font-size: 24px;
+            font-size: 26px;
             cursor: pointer;
+            color: #fff;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1.1;
+            text-align: left;
+        }
+        .logo span {
+            color: #ccff00;
         }
         h1 {
             color: #fff;
             font-size: 28px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         .stats {
             color: #ccff00;
@@ -55,7 +67,7 @@ HTML_TEMPLATE = """
         }
         input[type="text"] {
             width: 100%;
-            padding: 15px;
+            padding: 15px 15px 15px 80px;
             font-size: 16px;
             border-radius: 10px;
             border: none;
@@ -63,19 +75,22 @@ HTML_TEMPLATE = """
             box-sizing: border-box;
             background: #fff;
             color: #000;
+            text-align: right;
         }
         .paste-btn {
             position: absolute;
-            left: 10px;
+            left: 8px;
+            right: auto;
             top: 50%;
             transform: translateY(-50%);
             background: #ccff00;
             border: none;
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             color: #000;
+            font-size: 14px;
         }
         button[type="submit"] {
             width: 100%;
@@ -88,12 +103,53 @@ HTML_TEMPLATE = """
             border-radius: 10px;
             cursor: pointer;
         }
+        /* نافذة القائمة الجانبية المنبثقة */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            text-align: right;
+        }
+        .sidebar a {
+            padding: 10px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #ccff00;
+        }
+        .sidebar .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 25px;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="menu-icon">☰</div>
+        <div class="menu-icon" onclick="openNav()">☰</div>
+        <div class="logo">DOWNLOAD<br><span>VIDEOS</span></div>
+    </div>
+
+    <!-- القائمة الجانبية الخيارات -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
+        <a href="#">الرئيسية</a>
+        <a href="#">التحميلات الشائعة</a>
+        <a href="#">من نحن</a>
+        <a href="#">تواصل معنا</a>
     </div>
 
     <h1>تحميل الفيديوهات</h1>
@@ -115,6 +171,14 @@ HTML_TEMPLATE = """
             } catch (err) {
                 alert('فشل اللصق تلقائياً، قم باللصق يدوياً.');
             }
+        }
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
         }
     </script>
 
